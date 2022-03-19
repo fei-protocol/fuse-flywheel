@@ -7,3 +7,6 @@
 [submodule "lib/forge-std"]
 	path = lib/forge-std
 	url = https://github.com/brockelmore/forge-std
+[submodule "lib/flywheel-v2"]
+	path = lib/flywheel-v2
+	url = https://github.com/fei-protocol/flywheel-v2

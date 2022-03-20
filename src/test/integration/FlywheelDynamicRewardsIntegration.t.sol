@@ -93,7 +93,7 @@ contract FlywheelDynamicRewardsIntegrationTest is DSTestPlus {
         // finish 1st rewards cycle/start 2nd rewards cycle
         hevm.warp(((lastSync + 7 days) / 7 days) * 7 days);
         flywheel.accrue(fUST3POOL, user);
-        require(rewardToken.balanceOf(address(flywheel)) == 100e18);
+        require(rewardToken.balanceOf(address(rewards)) == 100e18);
         (index, ) = flywheel.marketState(fUST3POOL);
         require(index == 1e18);
 
@@ -107,13 +107,13 @@ contract FlywheelDynamicRewardsIntegrationTest is DSTestPlus {
         uint256 proportion = (14.2857142857e18 * 1e18) /
             fUST3POOL.totalSupply() +
             1e18;
-        require(index / 1e2 == proportion / 1e2);
+        require(index / 1e5 == proportion / 1e5);
 
         hevm.warp(lastSync + 3.5 days);
         flywheel.accrue(fUST3POOL, user);
         (index, ) = flywheel.marketState(fUST3POOL);
         proportion = (50e18 * 1e18) / fUST3POOL.totalSupply() + 1e18;
-        require(index / 1e2 == proportion / 1e2);
+        require(index / 1e5 == proportion / 1e5);
 
         hevm.warp(lastSync + 7 days);
         flywheel.accrue(fUST3POOL, user);
@@ -124,7 +124,7 @@ contract FlywheelDynamicRewardsIntegrationTest is DSTestPlus {
             (fUST3POOL.balanceOf(user) * 100e18) /
             fUST3POOL.totalSupply();
         uint256 userAccrued = flywheel.rewardsAccrued(user);
-        require(proportion / 1e4 == userAccrued / 1e4);
+        require(proportion / 1e5 == userAccrued / 1e5);
     }
 
     // Gas benchmarks

@@ -5,8 +5,9 @@ import {DSTestPlus} from "solmate/test/utils/DSTestPlus.sol";
 import {MockERC20, ERC20} from "solmate/test/utils/mocks/MockERC20.sol";
 
 import {MockBooster} from "flywheel/test/mocks/MockBooster.sol";
-import {MockMarket} from "flywheel/test/mocks/MockMarket.sol";
 import {FlywheelStaticRewards} from "flywheel/rewards/FlywheelStaticRewards.sol";
+
+import {MockMarket} from "../mocks/MockMarket.sol";
 
 import "../../FuseFlywheelCore.sol";
 

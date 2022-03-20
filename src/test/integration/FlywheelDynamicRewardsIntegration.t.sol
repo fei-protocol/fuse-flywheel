@@ -3,11 +3,11 @@ pragma solidity 0.8.10;
 
 import {DSTestPlus} from "solmate/test/utils/DSTestPlus.sol";
 import {MockERC20, ERC20} from "solmate/test/utils/mocks/MockERC20.sol";
-import {MockMarket} from "flywheel/test/mocks/MockMarket.sol";
 import {MockBooster} from "flywheel/test/mocks/MockBooster.sol";
 
 import "../../FuseFlywheelCore.sol";
 import {FuseFlywheelDynamicRewards} from "../../rewards/FuseFlywheelDynamicRewards.sol";
+import {MockMarket} from "../mocks/MockMarket.sol";
 
 interface Comptroller {
     function admin() external returns (address);

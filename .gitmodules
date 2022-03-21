@@ -10,3 +10,6 @@
 [submodule "lib/flywheel-v2"]
 	path = lib/flywheel-v2
 	url = https://github.com/fei-protocol/flywheel-v2
+[submodule "lib/libcompound"]
+	path = lib/libcompound
+	url = https://github.com/transmissions11/libcompound

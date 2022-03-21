@@ -73,7 +73,7 @@ contract FlywheelDynamicRewardsIntegrationTest is DSTestPlus {
 
         // init accrue 0
         require(flywheel.accrue(fUST3POOL, user) == 0);
-        (uint224 index, ) = flywheel.marketState(fUST3POOL);
+        (uint224 index, ) = flywheel.strategyState(fUST3POOL);
         (uint32 lastSync, uint32 rewardsCycleEnd, uint192 lastReward) = rewards
             .rewardsCycle(fUST3POOL);
 
@@ -87,14 +87,14 @@ contract FlywheelDynamicRewardsIntegrationTest is DSTestPlus {
             .rewardsCycle(fUST3POOL);
         hevm.prank(address(flywheel));
         require(flywheel.accrue(fUST3POOL, user) == 0);
-        (uint224 index, ) = flywheel.marketState(fUST3POOL);
+        (uint224 index, ) = flywheel.strategyState(fUST3POOL);
         require(index == 1e18);
 
         // finish 1st rewards cycle/start 2nd rewards cycle
         hevm.warp(((lastSync + 7 days) / 7 days) * 7 days);
         flywheel.accrue(fUST3POOL, user);
         require(rewardToken.balanceOf(address(rewards)) == 100e18);
-        (index, ) = flywheel.marketState(fUST3POOL);
+        (index, ) = flywheel.strategyState(fUST3POOL);
         require(index == 1e18);
 
         // accrue in 2nd cycle
@@ -103,7 +103,7 @@ contract FlywheelDynamicRewardsIntegrationTest is DSTestPlus {
         );
         hevm.warp(lastSync + 1 days);
         flywheel.accrue(fUST3POOL, user);
-        (index, ) = flywheel.marketState(fUST3POOL);
+        (index, ) = flywheel.strategyState(fUST3POOL);
         uint256 proportion = (14.2857142857e18 * 1e18) /
             fUST3POOL.totalSupply() +
             1e18;
@@ -111,13 +111,13 @@ contract FlywheelDynamicRewardsIntegrationTest is DSTestPlus {
 
         hevm.warp(lastSync + 3.5 days);
         flywheel.accrue(fUST3POOL, user);
-        (index, ) = flywheel.marketState(fUST3POOL);
+        (index, ) = flywheel.strategyState(fUST3POOL);
         proportion = (50e18 * 1e18) / fUST3POOL.totalSupply() + 1e18;
         require(index / 1e5 == proportion / 1e5);
 
         hevm.warp(lastSync + 7 days);
         flywheel.accrue(fUST3POOL, user);
-        (index, ) = flywheel.marketState(fUST3POOL);
+        (index, ) = flywheel.strategyState(fUST3POOL);
 
         // check 7 day rewards cycle distribution of 100 total tokens proportional to user balance
         proportion =

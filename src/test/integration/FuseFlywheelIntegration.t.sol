@@ -105,7 +105,7 @@ contract FlywheelIntegrationTest is DSTestPlus {
         require(flywheel.accrue(fTRIBE, user) == userRewards);
 
         // check market index
-        (uint224 index, ) = flywheel.marketState(fTRIBE);
+        (uint224 index, ) = flywheel.strategyState(fTRIBE);
         require(index == flywheel.ONE() + rewardsPerToken);
 
         // claim and check user balance
@@ -128,7 +128,7 @@ contract FlywheelIntegrationTest is DSTestPlus {
             1 ether;
         require(flywheel.accrue(fTRIBE, user) == userRewards2);
 
-        (uint224 index2, ) = flywheel.marketState(fTRIBE);
+        (uint224 index2, ) = flywheel.strategyState(fTRIBE);
 
         require(index2 == index + rewardsPerToken2);
 

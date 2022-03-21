@@ -12,7 +12,7 @@ abstract contract CErc20 is ERC20 {
 }
 
 contract FlywheelLensRouterIntegration is DSTestPlus {
-    FlywheelCore[] flywheels;
+    FuseFlywheelCore[] flywheels;
     FuseFlywheelLensRouter router;
 
     // Pool 156 comptroller
@@ -72,7 +72,7 @@ contract FlywheelLensRouterIntegration is DSTestPlus {
         bool[] memory accrue = new bool[](3);
         accrue[0] = accrue[1] = accrue[2] = true;
 
-        FlywheelCore[] memory fwheel2 = new FlywheelCore[](2);
+        FuseFlywheelCore[] memory fwheel2 = new FuseFlywheelCore[](2);
         fwheel2[0] = flywheels[0];
         fwheel2[1] = flywheels[1];
 

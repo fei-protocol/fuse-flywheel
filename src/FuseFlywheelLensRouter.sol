@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 pragma solidity 0.8.10;
 
-import {FlywheelCore, ERC20} from "flywheel/FlywheelCore.sol";
+import "./FuseFlywheelCore.sol";
 
 abstract contract CToken is ERC20 {
     function exchangeRateCurrent() external virtual returns (uint256);
@@ -17,7 +17,7 @@ interface Comptroller {
     function getRewardsDistributors()
         external
         view
-        returns (FlywheelCore[] memory);
+        returns (FuseFlywheelCore[] memory);
 
     function getAllMarkets() external view returns (CToken[] memory);
 
@@ -54,7 +54,8 @@ contract FuseFlywheelLensRouter {
         returns (MarketRewardsInfo[] memory)
     {
         CToken[] memory markets = comptroller.getAllMarkets();
-        FlywheelCore[] memory flywheels = comptroller.getRewardsDistributors();
+        FuseFlywheelCore[] memory flywheels = comptroller
+            .getRewardsDistributors();
         address[] memory rewardTokens = new address[](flywheels.length);
         uint256[] memory rewardTokenPrices = new uint256[](flywheels.length);
         PriceOracle oracle = comptroller.oracle();
@@ -71,7 +72,7 @@ contract FuseFlywheelLensRouter {
             uint256 price = oracle.getUnderlyingPrice(market);
 
             for (uint256 j = 0; j < flywheels.length; j++) {
-                FlywheelCore flywheel = flywheels[j];
+                FuseFlywheelCore flywheel = flywheels[j];
                 if (i == 0) {
                     address rewardToken = address(flywheel.rewardToken());
                     rewardTokens[j] = rewardToken;
@@ -82,12 +83,12 @@ contract FuseFlywheelLensRouter {
                     (
                         uint224 indexBefore,
                         uint32 lastUpdatedTimestampBefore
-                    ) = flywheel.marketState(market);
+                    ) = flywheel.strategyState(market);
                     flywheel.accrue(market, address(0));
                     (
                         uint224 indexAfter,
                         uint32 lastUpdatedTimestampAfter
-                    ) = flywheel.marketState(market);
+                    ) = flywheel.strategyState(market);
                     if (
                         lastUpdatedTimestampAfter > lastUpdatedTimestampBefore
                     ) {
@@ -122,7 +123,7 @@ contract FuseFlywheelLensRouter {
     function getUnclaimedRewardsForMarket(
         address user,
         CToken market,
-        FlywheelCore[] calldata flywheels,
+        FuseFlywheelCore[] calldata flywheels,
         bool[] calldata accrue
     ) external returns (uint256[] memory rewards) {
         uint256 size = flywheels.length;
@@ -146,7 +147,7 @@ contract FuseFlywheelLensRouter {
     function getUnclaimedRewardsByMarkets(
         address user,
         CToken[] calldata markets,
-        FlywheelCore[] calldata flywheels,
+        FuseFlywheelCore[] calldata flywheels,
         bool[] calldata accrue
     ) external returns (uint256[] memory rewards) {
         rewards = new uint256[](flywheels.length);

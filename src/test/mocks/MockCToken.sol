@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity ^0.8.10;
 
-import {MockERC20} from "solmate/test/utils/mocks/MockERC20.sol";
+import {MockERC20} from "./MockERC20.sol";
 import {CToken} from "../../external/CToken.sol";
 import {InterestRateModel} from "libcompound/interfaces/InterestRateModel.sol";
 import {ERC20} from "solmate/tokens/ERC20.sol";
@@ -26,15 +26,21 @@ contract MockInterestRateModel is InterestRateModel {
 }
 
 contract MockUnitroller {
-    function supplyCaps(address cToken) external view returns (uint256) {
+    function supplyCaps(
+        address /* cToken*/
+    ) external view returns (uint256) {
         return 100e18;
     }
 
-    function mintGuardianPaused(address cToken) external view returns (bool) {
+    function mintGuardianPaused(
+        address /* cToken*/
+    ) external view returns (bool) {
         return false;
     }
 
-    function borrowGuardianPaused(address cToken) external view returns (bool) {
+    function borrowGuardianPaused(
+        address /* cToken*/
+    ) external view returns (bool) {
         return false;
     }
 }
@@ -49,7 +55,7 @@ contract MockCToken is MockERC20, CToken {
     uint256 private constant EXCHANGE_RATE_SCALE = 1e18;
     uint256 public effectiveExchangeRate = 2e18;
 
-    constructor(address _token, bool _isCEther) MockERC20("token", "TKN", 18) {
+    constructor(address _token, bool _isCEther) {
         token = MockERC20(_token);
         isCEther = _isCEther;
         irm = new MockInterestRateModel();
@@ -128,6 +134,20 @@ contract MockCToken is MockERC20, CToken {
             token.transfer(msg.sender, redeemAmount);
         }
         return error ? 1 : 0;
+    }
+
+    function getAccountSnapshot(address)
+        external
+        view
+        override
+        returns (
+            uint256,
+            uint256,
+            uint256,
+            uint256
+        )
+    {
+        return (0, 0, 0, 0);
     }
 
     function exchangeRateStored() external view override returns (uint256) {

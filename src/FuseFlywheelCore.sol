@@ -7,6 +7,7 @@ contract FuseFlywheelCore is FlywheelCore {
     bool public constant isRewardsDistributor = true;
 
     bool public constant isFlywheel = true;
+    ERC20[] public allMarkets;
 
     constructor(
         ERC20 _rewardToken,
@@ -54,6 +55,8 @@ contract FuseFlywheelCore is FlywheelCore {
             lastUpdatedTimestamp: uint32(block.timestamp)
         });
 
+        allMarkets.push(strategy);
+
         emit AddStrategy(address(strategy));
     }
 
@@ -63,5 +66,9 @@ contract FuseFlywheelCore is FlywheelCore {
         returns (RewardsState memory)
     {
         return strategyState[strategy];
+    }
+
+    function getAllMarkets() external view returns (ERC20[] memory) {
+        return allMarkets;
     }
 }

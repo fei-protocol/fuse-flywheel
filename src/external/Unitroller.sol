@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity ^0.8.4;
 
-import {CERC20} from "libcompound/interfaces/CERC20.sol";
-
 abstract contract Unitroller {
     struct Market {
         bool isListed;
@@ -22,6 +20,27 @@ abstract contract Unitroller {
     mapping(address => address) public cTokensByUnderlying;
     mapping(address => uint256) public supplyCaps;
 
+    function getAccountLiquidity(address account)
+        public
+        view
+        virtual
+        returns (
+            uint256 err,
+            uint256 liquidity,
+            uint256 shortfall
+        );
+
+    function getAssetsIn(address account)
+        external
+        view
+        virtual
+        returns (address[] memory);
+
+    function enterMarkets(address[] memory cTokens)
+        public
+        virtual
+        returns (uint256[] memory);
+
     function _setPendingAdmin(address newPendingAdmin)
         public
         virtual
@@ -30,12 +49,12 @@ abstract contract Unitroller {
     function _setBorrowCapGuardian(address newBorrowCapGuardian) public virtual;
 
     function _setMarketSupplyCaps(
-        CERC20[] calldata cTokens,
+        address[] calldata cTokens,
         uint256[] calldata newSupplyCaps
     ) external virtual;
 
     function _setMarketBorrowCaps(
-        CERC20[] calldata cTokens,
+        address[] calldata cTokens,
         uint256[] calldata newBorrowCaps
     ) external virtual;
 
@@ -44,12 +63,12 @@ abstract contract Unitroller {
         virtual
         returns (uint256);
 
-    function _setMintPaused(CERC20 cToken, bool state)
+    function _setMintPaused(address cToken, bool state)
         public
         virtual
         returns (bool);
 
-    function _setBorrowPaused(CERC20 cToken, bool borrowPaused)
+    function _setBorrowPaused(address cToken, bool borrowPaused)
         public
         virtual
         returns (bool);
@@ -74,7 +93,7 @@ abstract contract Unitroller {
         returns (uint256);
 
     function _setCollateralFactor(
-        CERC20 cToken,
+        address cToken,
         uint256 newCollateralFactorMantissa
     ) public virtual returns (uint256);
 
@@ -125,7 +144,10 @@ abstract contract Unitroller {
         bool[] calldata statuses
     ) external virtual returns (uint256);
 
-    function _unsupportMarket(CERC20 cToken) external virtual returns (uint256);
+    function _unsupportMarket(address cToken)
+        external
+        virtual
+        returns (uint256);
 
     function _toggleAutoImplementations(bool enabled)
         public

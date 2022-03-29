@@ -46,8 +46,10 @@ contract TestFuseERC4626 is DSTestPlus {
                 deposit()
     //////////////////////////////////////////////////////////////*/
 
-    function testDeposit1(uint128 _assets) public {
-        uint256 assets = uint256(_assets) + 1; // don't fuzz with 0
+    function testDeposit1(uint256 assets) public {
+        hevm.assume(assets > 0);
+        hevm.assume(assets <= type(uint128).max);
+
         address receiver = address(0x42);
 
         token.mint(address(this), assets);
@@ -77,8 +79,10 @@ contract TestFuseERC4626 is DSTestPlus {
                 mint()
     //////////////////////////////////////////////////////////////*/
 
-    function testMint1(uint128 _shares) public {
-        uint256 shares = uint256(_shares) + 1; // don't fuzz with 0
+    function testMint1(uint256 shares) public {
+        hevm.assume(shares > 0);
+        hevm.assume(shares <= type(uint128).max);
+
         address receiver = address(0x42);
 
         uint256 expectedAssets = vault.previewMint(shares);
@@ -264,8 +268,11 @@ contract TestFuseERC4626 is DSTestPlus {
         require(actual == expected);
     }
 
-    function testPreviewDeposit(uint128 assets) public view {
-        uint256 expected = uint256(assets); // 1:1 initially
+    function testPreviewDeposit(uint256 assets) public {
+        hevm.assume(assets > 0);
+        hevm.assume(assets <= type(uint128).max);
+
+        uint256 expected = assets; // 1:1 initially
         uint256 actual = vault.previewDeposit(assets);
         require(actual == expected);
     }
@@ -277,8 +284,11 @@ contract TestFuseERC4626 is DSTestPlus {
         require(actual == expected);
     }
 
-    function testPreviewMint(uint128 shares) public view {
-        uint256 expected = uint256(shares); // 1:1 initially
+    function testPreviewMint(uint256 shares) public {
+        hevm.assume(shares > 0);
+        hevm.assume(shares <= type(uint128).max);
+
+        uint256 expected = shares; // 1:1 initially
         uint256 actual = vault.previewMint(shares);
         require(actual == expected);
     }
@@ -294,7 +304,10 @@ contract TestFuseERC4626 is DSTestPlus {
         require(vault.maxWithdraw(owner) == 1e18);
     }
 
-    function testPreviewWithdraw(uint128 assets) public view {
+    function testPreviewWithdraw(uint256 assets) public {
+        hevm.assume(assets > 0);
+        hevm.assume(assets <= type(uint128).max);
+
         uint256 expected = assets; // 1:1 initially
         uint256 actual = vault.previewWithdraw(assets);
         require(actual == expected);
@@ -311,8 +324,11 @@ contract TestFuseERC4626 is DSTestPlus {
         require(vault.maxRedeem(owner) == 1e17);
     }
 
-    function testPreviewRedeem(uint128 shares) public view {
-        uint256 expected = uint256(shares); // 1:1 initially
+    function testPreviewRedeem(uint256 shares) public {
+        hevm.assume(shares > 0);
+        hevm.assume(shares <= type(uint128).max);
+
+        uint256 expected = shares; // 1:1 initially
         uint256 actual = vault.previewRedeem(shares);
         require(actual == expected);
     }

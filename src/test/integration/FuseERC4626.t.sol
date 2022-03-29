@@ -276,10 +276,10 @@ contract IntegrationTestFuseERC4626 is DSTestPlus {
         assertEq(vault.maxRedeem(address(this)), 0.5e18);
     }
 
-    function testTotalAssets(uint256 deposit1) public {
+    function testTotalAssets(uint128 _deposit1) public {
         // deposit() reverts for 0 & overly large values
-        hevm.assume(deposit1 > 1);
-        hevm.assume(deposit1 <= type(uint128).max);
+        hevm.assume(_deposit1 > 1);
+        uint256 deposit1 = uint256(_deposit1);
 
         uint256 deposit2 = deposit1 / 2;
         uint256 donation = deposit1;

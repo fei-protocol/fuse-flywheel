@@ -7,7 +7,6 @@ contract FuseFlywheelCore is FlywheelCore {
     bool public constant isRewardsDistributor = true;
 
     bool public constant isFlywheel = true;
-    ERC20[] public allMarkets;
 
     constructor(
         ERC20 _rewardToken,
@@ -47,17 +46,8 @@ contract FuseFlywheelCore is FlywheelCore {
         return rewardsAccrued[user];
     }
 
-    // TODO call addStrategyForRewards instead
     function addMarketForRewards(ERC20 strategy) external {
-        require(strategyState[strategy].index == 0, "strategy");
-        strategyState[strategy] = RewardsState({
-            index: ONE,
-            lastUpdatedTimestamp: uint32(block.timestamp)
-        });
-
-        allMarkets.push(strategy);
-
-        emit AddStrategy(address(strategy));
+        _addStrategyForRewards(strategy);
     }
 
     function marketState(ERC20 strategy)
@@ -68,7 +58,11 @@ contract FuseFlywheelCore is FlywheelCore {
         return strategyState[strategy];
     }
 
+    function allMarkets(uint256 index) external view returns (ERC20) {
+        return allStrategies[index];
+    }
+
     function getAllMarkets() external view returns (ERC20[] memory) {
-        return allMarkets;
+        return allStrategies;
     }
 }

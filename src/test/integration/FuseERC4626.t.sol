@@ -7,6 +7,7 @@ import {CToken} from "../../external/CToken.sol";
 import {Unitroller} from "../../external/Unitroller.sol";
 import {FuseERC4626} from "../../vaults/fuse/FuseERC4626.sol";
 import {DSTestPlus} from "solmate/test/utils/DSTestPlus.sol";
+import {FusePoolUtils} from "../utils/FusePoolUtils.sol";
 
 contract IntegrationTestFuseERC4626 is DSTestPlus {
     MockERC20 private token;
@@ -24,151 +25,58 @@ contract IntegrationTestFuseERC4626 is DSTestPlus {
         token = new MockERC20();
         token2 = new MockERC20();
         oracle = new MockFusePriceOracle();
-        hevm.label(address(token2), "token2");
-        hevm.label(address(token), "token");
+
+        address[] memory tokens = new address[](2);
+        tokens[0] = address(token);
+        tokens[1] = address(token2);
+        hevm.label(tokens[0], "tokens[0]");
+        hevm.label(tokens[1], "tokens[1]");
         hevm.label(address(oracle), "oracle");
 
         // Rari addresses
         hevm.label(
-            address(0x91cE5566DC3170898C5aeE4ae4dD314654B47415),
+            FusePoolUtils.MASTER_PRICE_ORACLE_INITIALIZABLECLONES,
             "MasterPriceOracle InitializableClones"
         );
         hevm.label(
-            address(0xb3c8eE7309BE658c186F986388c2377da436D8fb),
+            FusePoolUtils.MASTER_PRICE_ORACLE_IMPLEMENTATION,
             "MasterPriceOracle Implementation"
         );
         hevm.label(
-            address(0x1887118E49e0F4A78Bd71B792a49dE03504A764D),
+            FusePoolUtils.MASTER_PRICE_ORACLE_RARI_DEFAULT,
             "MasterPriceOracle Rari (default)"
         );
         hevm.label(
-            address(0x835482FE0532f169024d5E9410199369aAD5C77E),
+            FusePoolUtils.FUSE_POOL_DIRECTORY,
             "Rari Capital: Fuse Pool Directory"
         );
         hevm.label(
-            address(0xE16DB319d9dA7Ce40b666DD2E365a4b8B3C18217),
+            FusePoolUtils.FUSE_COMPTROLLER_IMPLEMENTATION,
             "Rari Capital: Comptroller implementation"
         );
-        hevm.label(
-            address(0xbAB47e4B692195BF064923178A90Ef999A15f819),
-            "JumpRateModel"
-        );
-        hevm.label(
-            address(0x67Db14E73C2Dce786B5bbBfa4D010dEab4BBFCF9),
-            "CErc20Delegate"
-        );
+        hevm.label(FusePoolUtils.FUSE_JUMP_RATE_MODEL, "JumpRateModel");
+        hevm.label(FusePoolUtils.FUSE_CERC20_DELEGATE, "CErc20Delegate");
 
-        // create a new master price oracle
-        (bool success, bytes memory data) = address(
-            0x91cE5566DC3170898C5aeE4ae4dD314654B47415
-        ).call(
-                abi.encodeWithSignature(
-                    "clone(address,bytes)",
-                    address(0xb3c8eE7309BE658c186F986388c2377da436D8fb), // MasterPriceOracle implementation
-                    abi.encodeWithSignature(
-                        "initialize(address[],address[],address,address,bool)",
-                        new address[](0), // underlyings
-                        new address[](0), // oracles
-                        address(0x1887118E49e0F4A78Bd71B792a49dE03504A764D), // default oracle = Rari master price oracle
-                        address(this), // pool admin
-                        true // canAdminOwerwrite
-                    )
-                )
-            );
-        require(success, "Error creating master price oracle");
-        assembly {
-            sstore(masterOracle.slot, mload(add(data, 32)))
-        }
-        hevm.label(address(masterOracle), "Test MasterPriceOracle");
+        // create the Fuse pool
+        (
+            address _masterOracle,
+            address _troller,
+            address[] memory _cTokens
+        ) = FusePoolUtils.createPool(tokens, address(oracle));
 
-        // create a new Rari pool (call Rari Capital: Fuse Pool Directory)
-        (success, data) = address(0x835482FE0532f169024d5E9410199369aAD5C77E)
-            .call(
-                abi.encodeWithSignature(
-                    "deployPool(string,address,bool,uint256,uint256,address)",
-                    "Test Pool", // name
-                    address(0xE16DB319d9dA7Ce40b666DD2E365a4b8B3C18217), // implementation = Rari Capital: Comptroller Implementation
-                    false, // enforceWhitelist
-                    0.5e18, // closeFactor
-                    1.08e18, // liquidationIncentive
-                    masterOracle // priceOracle
-                )
-            );
-        require(success, "Error creating pool");
-        assembly {
-            sstore(troller.slot, mload(add(data, 64)))
-        }
-        hevm.label(address(troller), "Test Troller");
-
-        // accept admin of the comptroller
-        troller._acceptAdmin();
-        assertEq(troller.admin(), address(this));
-
-        // add token price to master oracle
-        address[] memory underlyings = new address[](2);
-        address[] memory oracles = new address[](2);
-        underlyings[0] = address(token);
-        oracles[0] = address(oracle);
-        underlyings[1] = address(token2);
-        oracles[1] = address(oracle);
-        (success, data) = masterOracle.call(
-            abi.encodeWithSignature(
-                "add(address[],address[])",
-                underlyings,
-                oracles
-            )
-        );
-        require(success, "Error setting new token price feed in master oracle");
-
-        // add mock token in the fuse pool
-        troller._deployMarket(
-            false, // isCEther
-            abi.encode( // CErc20Delegator constructor data
-                address(token), // underlying
-                address(troller), // comptroller
-                address(0xbAB47e4B692195BF064923178A90Ef999A15f819), // interestRateModel: JumpRateModel
-                "fToken-x", // name
-                "Fuse Token for MockToken", // symbol
-                address(0x67Db14E73C2Dce786B5bbBfa4D010dEab4BBFCF9), // implementation: CErc20Delegate
-                bytes(""), // becomeImplementationData
-                uint256(0), // reserveFactorMantissa
-                uint256(0) // adminFeeMantissa
-            ),
-            0.7e18 // collateralFactorMantissa
-        );
-        cToken = CToken(troller.cTokensByUnderlying(address(token)));
-        require(
-            address(cToken) != address(0),
-            "Error adding mock token to Fuse pool"
-        );
-        hevm.label(address(cToken), "fToken-x");
-
-        // add mock token2 in the fuse pool
-        troller._deployMarket(
-            false, // isCEther
-            abi.encode( // CErc20Delegator constructor data
-                address(token2), // underlying
-                address(troller), // comptroller
-                address(0xbAB47e4B692195BF064923178A90Ef999A15f819), // interestRateModel: JumpRateModel
-                "fToken2-x", // name
-                "Fuse Token for MockToken2", // symbol
-                address(0x67Db14E73C2Dce786B5bbBfa4D010dEab4BBFCF9), // implementation: CErc20Delegate
-                bytes(""), // becomeImplementationData
-                uint256(0), // reserveFactorMantissa
-                uint256(0) // adminFeeMantissa
-            ),
-            0.7e18 // collateralFactorMantissa
-        );
-        cToken2 = CToken(troller.cTokensByUnderlying(address(token2)));
-        require(
-            address(cToken2) != address(0),
-            "Error adding mock token2 to Fuse pool"
-        );
-        hevm.label(address(cToken2), "fToken2-x");
+        // set state variables & hevm labels
+        masterOracle = _masterOracle;
+        troller = Unitroller(_troller);
+        cToken = CToken(_cTokens[0]);
+        cToken2 = CToken(_cTokens[1]);
+        hevm.label(_masterOracle, "masterOracle");
+        hevm.label(_troller, "troller");
+        hevm.label(_cTokens[0], "cToken");
+        hevm.label(_cTokens[1], "cToken2");
 
         // set oracle price values (static = 1 ETH)
-        oracle.mockSetPrice(address(cToken), 1e18);
-        oracle.mockSetPrice(address(cToken2), 1e18);
+        oracle.mockSetPrice(_cTokens[0], 1e18);
+        oracle.mockSetPrice(_cTokens[1], 1e18);
 
         // create vault
         vault = new FuseERC4626(
@@ -180,10 +88,7 @@ contract IntegrationTestFuseERC4626 is DSTestPlus {
 
         // allow this contract to use both tokens as collateral
         // and borrow both tokens
-        address[] memory cTokens = new address[](2);
-        cTokens[0] = address(cToken);
-        cTokens[1] = address(cToken2);
-        uint256[] memory results = troller.enterMarkets(cTokens);
+        uint256[] memory results = troller.enterMarkets(_cTokens);
         require(results[0] == 0, "Failed to enter cToken market");
         require(results[1] == 0, "Failed to enter cToken2 market");
     }

@@ -56,6 +56,19 @@ contract MockCToken is MockERC20, CToken {
         comptroller = address(new MockUnitroller());
     }
 
+    function borrowBalanceStored(address user)
+        external
+        view
+        override
+        returns (uint256)
+    {
+        return 0;
+    }
+
+    function borrowIndex() external view override returns (uint256) {
+        return 0;
+    }
+
     function setError(bool _error) external {
         error = _error;
     }

@@ -56,46 +56,6 @@ contract FuseERC4626 is ERC4626 {
         require(cToken.mint(underlyingAmount) == 0, "MINT_FAILED");
     }
 
-    function deposit(uint256 amount, address receiver)
-        public
-        override
-        returns (uint256)
-    {
-        require(amount != 0, "ZERO_ASSETS"); // Deposit 0 makes no sense
-        require(amount <= type(uint128).max, "MANY_ASSETS"); // Check for overly large values
-        return super.deposit(amount, receiver);
-    }
-
-    function mint(uint256 shares, address receiver)
-        public
-        override
-        returns (uint256)
-    {
-        require(shares != 0, "ZERO_SHARES"); // Minting 0 makes no sense
-        require(shares <= type(uint128).max, "MANY_SHARES"); // Check for overly large values
-        return super.mint(shares, receiver);
-    }
-
-    function withdraw(
-        uint256 assets,
-        address receiver,
-        address owner
-    ) public override returns (uint256) {
-        require(assets != 0, "ZERO_ASSETS"); // Withdraw 0 makes no sense
-        require(assets <= type(uint128).max, "MANY_ASSETS"); // Check for overly large values
-        return super.withdraw(assets, receiver, owner);
-    }
-
-    function redeem(
-        uint256 shares,
-        address receiver,
-        address owner
-    ) public override returns (uint256) {
-        require(shares != 0, "ZERO_SHARES"); // Redeem 0 makes no sense
-        require(shares <= type(uint128).max, "MANY_SHARES"); // Check for overly large values
-        return super.redeem(shares, receiver, owner);
-    }
-
     /// @notice Total amount of the underlying asset that
     /// is "managed" by Vault.
     function totalAssets() public view override returns (uint256) {

@@ -349,105 +349,98 @@ contract IntegrationTestFuseERC4626 is DSTestPlus {
         assertEq(vault.totalSupply(), shares1 + shares2); // should not move
     }
 
-    function testMint(uint256 shares) public {
+    function testMint(uint128 _shares) public {
+        uint256 shares = uint256(_shares);
+
         uint256 previewAssets = vault.previewMint(shares);
         token.mint(address(this), previewAssets);
         token.approve(address(vault), previewAssets);
 
-        if (shares == 0) {
-            hevm.expectRevert(bytes("ZERO_SHARES"));
-            vault.mint(shares, address(this));
-        } else if (shares > type(uint128).max) {
-            hevm.expectRevert(bytes("MANY_SHARES"));
-            vault.mint(shares, address(this));
-        } else {
-            uint256 balanceBefore = token.balanceOf(address(this));
-            uint256 returnedAssets = vault.mint(shares, address(this));
-            uint256 spentAssets = balanceBefore -
-                token.balanceOf(address(this));
+        uint256 balanceBefore = token.balanceOf(address(this));
+        uint256 returnedAssets = vault.mint(shares, address(this));
+        uint256 spentAssets = balanceBefore - token.balanceOf(address(this));
 
-            assertEq(previewAssets, spentAssets);
-            assertEq(returnedAssets, spentAssets);
-        }
+        assertEq(previewAssets, spentAssets);
+        assertEq(returnedAssets, spentAssets);
     }
 
-    function testDeposit(uint256 assets) public {
-        uint256 previewShares = vault.previewDeposit(assets);
+    function testDeposit(uint128 _assets) public {
+        // depositing 0 or 1 wei gives 0 cToken shares
+        // and the solmate impl reverts with ZERO_SHARES
+        hevm.assume(_assets > 0);
+
+        uint256 assets = uint256(_assets);
+
         token.mint(address(this), assets);
         token.approve(address(vault), assets);
 
-        if (assets == 0) {
-            hevm.expectRevert(bytes("ZERO_ASSETS"));
-            vault.deposit(assets, address(this));
-        } else if (assets > type(uint128).max) {
-            hevm.expectRevert(bytes("MANY_ASSETS"));
-            vault.deposit(assets, address(this));
-        } else {
-            uint256 balanceBefore = vault.balanceOf(address(this));
-            uint256 returnedShares = vault.deposit(assets, address(this));
-            uint256 receivedShares = vault.balanceOf(address(this)) -
-                balanceBefore;
+        uint256 previewShares = vault.previewDeposit(assets);
+        uint256 balanceBefore = vault.balanceOf(address(this));
+        uint256 returnedShares = vault.deposit(assets, address(this));
+        uint256 receivedShares = vault.balanceOf(address(this)) - balanceBefore;
 
-            assertEq(previewShares, receivedShares);
-            assertEq(returnedShares, receivedShares);
-        }
+        assertEq(previewShares, receivedShares);
+        assertEq(returnedShares, receivedShares);
     }
 
-    function testRedeem(uint256 shares) public {
+    function testRedeem(uint112 _shares) public {
+        // redeeming 0 shares fails with ZERO_ASSETS (solmate impl)
+        hevm.assume(_shares > 0);
+
+        uint256 shares = uint256(_shares);
+
         // seed the current contract with vault shares
-        token.mint(address(this), type(uint256).max);
-        token.approve(address(vault), type(uint256).max);
-        vault.mint(type(uint128).max, address(this));
-        vault.mint(1e18, address(this));
+        uint256 seedAssets = uint256(type(uint112).max) + 1e18;
+        token.mint(address(this), seedAssets);
+        token.approve(address(vault), seedAssets);
+        vault.deposit(seedAssets, address(this));
 
-        if (shares == 0) {
-            hevm.expectRevert(bytes("ZERO_SHARES"));
-            vault.redeem(shares, address(this), address(this));
-        } else if (shares > type(uint128).max) {
-            hevm.expectRevert(bytes("MANY_SHARES"));
-            vault.redeem(shares, address(this), address(this));
-        } else {
-            uint256 previewAssets = vault.previewRedeem(shares);
-            uint256 balanceBefore = token.balanceOf(address(this));
-            uint256 returnedAssets = vault.redeem(
-                shares,
-                address(this),
-                address(this)
-            );
-            uint256 receivedAssets = token.balanceOf(address(this)) -
-                balanceBefore;
+        uint256 previewAssets = vault.previewRedeem(shares);
+        uint256 balanceBefore = token.balanceOf(address(this));
+        uint256 returnedAssets = vault.redeem(
+            shares,
+            address(this),
+            address(this)
+        );
+        uint256 receivedAssets = token.balanceOf(address(this)) - balanceBefore;
 
-            assertEq(previewAssets, receivedAssets);
-            assertEq(returnedAssets, receivedAssets);
-        }
+        assertEq(previewAssets, receivedAssets);
+        assertEq(returnedAssets, receivedAssets);
     }
 
-    function testWithdraw(uint256 assets) public {
+    function testWithdraw(uint112 _assets) public {
+        uint256 assets = uint256(_assets);
+
         // seed the current contract with vault shares
-        token.mint(address(this), type(uint256).max);
-        token.approve(address(vault), type(uint256).max);
-        vault.mint(type(uint128).max, address(this));
-        vault.mint(1e18, address(this));
+        uint256 seedAssets = uint256(type(uint112).max) + 1e18;
+        token.mint(address(this), seedAssets);
+        token.approve(address(vault), seedAssets);
+        vault.deposit(seedAssets, address(this));
 
-        if (assets == 0) {
-            hevm.expectRevert(bytes("ZERO_ASSETS"));
-            vault.withdraw(assets, address(this), address(this));
-        } else if (assets > type(uint128).max) {
-            hevm.expectRevert(bytes("MANY_ASSETS"));
-            vault.withdraw(assets, address(this), address(this));
-        } else {
-            uint256 previewShares = vault.previewWithdraw(assets);
-            uint256 balanceBefore = vault.balanceOf(address(this));
-            uint256 returnedShares = vault.withdraw(
-                assets,
-                address(this),
-                address(this)
-            );
-            uint256 spentShares = balanceBefore -
-                vault.balanceOf(address(this));
+        uint256 previewShares = vault.previewWithdraw(assets);
+        uint256 balanceBefore = vault.balanceOf(address(this));
+        uint256 returnedShares = vault.withdraw(
+            assets,
+            address(this),
+            address(this)
+        );
+        uint256 spentShares = balanceBefore - vault.balanceOf(address(this));
 
-            assertEq(spentShares, previewShares);
-            assertEq(returnedShares, spentShares);
-        }
+        assertEq(spentShares, previewShares);
+        assertEq(returnedShares, spentShares);
+    }
+
+    function testZeroRevert() public {
+        // seed the current contract with vault shares
+        uint256 seedAssets = uint256(type(uint128).max) + 1e18;
+        token.mint(address(this), seedAssets);
+        token.approve(address(vault), seedAssets);
+        vault.mint(seedAssets, address(this));
+
+        // test revert cases
+        hevm.expectRevert(bytes("ZERO_ASSETS"));
+        vault.redeem(0, address(this), address(this));
+        hevm.expectRevert(bytes("ZERO_SHARES"));
+        vault.deposit(0, address(this));
     }
 }

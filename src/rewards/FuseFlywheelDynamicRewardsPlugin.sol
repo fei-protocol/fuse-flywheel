@@ -7,15 +7,16 @@ interface ICERC20 {
     function plugin() external returns (address);
 }
 
-interface IERC4626 {
+interface IPlugin {
     function claimRewards() external;
 }
 
 /** 
  @title Fuse Flywheel Dynamic Reward Stream
  @notice Determines rewards based on reward cycle
+ Each cycle, claims rewards on the plugin before getting the reward amount
 */
-contract FuseFlywheelDynamicRewards is FlywheelDynamicRewards {
+contract FuseFlywheelDynamicRewardsPlugin is FlywheelDynamicRewards {
     using SafeTransferLib for ERC20;
 
     constructor(FlywheelCore _flywheel, uint32 _cycleLength)
@@ -27,7 +28,7 @@ contract FuseFlywheelDynamicRewards is FlywheelDynamicRewards {
         override
         returns (uint192)
     {
-        IERC4626 plugin = IERC4626(ICERC20(address(strategy)).plugin());
+        IERC4626 plugin = IPlugin(ICERC20(address(strategy)).plugin());
         try plugin.claimRewards() {} catch {}
 
         uint256 rewardAmount = rewardToken.balanceOf(address(strategy));

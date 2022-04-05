@@ -28,7 +28,7 @@ contract FuseFlywheelDynamicRewardsPlugin is FlywheelDynamicRewards {
         override
         returns (uint192)
     {
-        IERC4626 plugin = IPlugin(ICERC20(address(strategy)).plugin());
+        IPlugin plugin = IPlugin(ICERC20(address(strategy)).plugin());
         try plugin.claimRewards() {} catch {}
 
         uint256 rewardAmount = rewardToken.balanceOf(address(strategy));

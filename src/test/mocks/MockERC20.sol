@@ -16,7 +16,11 @@ contract MockERC20 is ERC20 {
         return true;
     }
 
-    function approveOverride(address owner, address spender, uint256 amount) public {
+    function approveOverride(
+        address owner,
+        address spender,
+        uint256 amount
+    ) public {
         allowance[owner][spender] = amount;
     }
 }

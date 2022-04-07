@@ -105,6 +105,5 @@ contract FusePool156Test is DSTestPlus, stdCheats {
         require(cvxFXSf.redeem(cvxFXSf.balanceOf(user)) == 0, "cvxFXS redeem");
         require(cvxCRVf.redeem(cvxCRVf.balanceOf(user)) == 0, "cvxCRV redeem");
         require(rethstethCRVf.redeem(rethstethCRVf.balanceOf(user)) == 0, "rethstethCRV redeem");
-
     }
 }

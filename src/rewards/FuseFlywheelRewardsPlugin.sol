@@ -33,6 +33,7 @@ contract FuseFlywheelDynamicRewards is IFlywheelRewards {
     constructor(ERC20 _rewardToken, FlywheelCore _flywheel) {
         rewardToken = _rewardToken;
         flywheel = _flywheel;
+        _rewardToken.safeApprove(address(_flywheel), type(uint256).max);
     }
 
     /**

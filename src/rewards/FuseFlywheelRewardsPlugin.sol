@@ -55,7 +55,7 @@ contract FuseFlywheelDynamicRewards is IFlywheelRewards {
         if (amount > 0)
             rewardToken.safeTransferFrom(
                 address(market),
-                address(flywheel.flywheelRewards()),
+                address(this),
                 amount
             );
     }

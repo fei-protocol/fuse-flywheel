@@ -30,9 +30,11 @@ contract FusePool156Test is DSTestPlus, stdCheats {
     
     ERC20 cvx = ERC20(0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B);
     ERC20 crv = ERC20(0xD533a949740bb3306d119CC777fa900bA034cd52);
+    ERC20 fxs = ERC20(0x3432B6A60D23Ca0dFCa7761B7ab56459D9C964D0);
 
     FlywheelCore cvxFlywheelCore = FlywheelCore(0x18B9aE8499e560bF94Ef581420c38EC4CfF8559C);
     FlywheelCore crvFlywheelCore = FlywheelCore(0x65DFbde18D7f12a680480aBf6e17F345d8637829);
+    FlywheelCore fxsFlywheelCore = FlywheelCore(0x30E9A1Bc6A6a478fC32F9ac900C6530Ad3A1616F);
 
     function setUp() public {
         hevm.label(address(fuseAdmin), "fuseAdmin");
@@ -43,17 +45,17 @@ contract FusePool156Test is DSTestPlus, stdCheats {
     function testPool156() public {
         hevm.startPrank(user);
 
-        tip(cvxFXSFXS, user, 100);
+        tip(cvxFXSFXS, user, 100e18);
         CErc20 cvxFXSf = CErc20(0x30916E14C139d65CAfbEEcb3eA525c59df643281);
-        require(cvxFXSf.mint(100) == 0, "mint failed");
+        require(cvxFXSf.mint(100e18) == 0, "mint failed");
 
-        tip(cvxcrvCRV, user, 100);
+        tip(cvxcrvCRV, user, 100e18);
         CErc20 cvxCRVf = CErc20(0x58c8087eF758DF6F6B3dc045cF135C850a8307b6);
-        require(cvxCRVf.mint(100) == 0, "mint failed");
+        require(cvxCRVf.mint(100e18) == 0, "mint failed");
 
-        tip(rethstethCRV, user, 100);
+        tip(rethstethCRV, user, 100e18);
         CErc20 rethstethCRVf = CErc20(0xD88B2E6304d1827e22D2ACC2FbCeD836cd439b85);
-        require(rethstethCRVf.mint(100) == 0, "mint failed");
+        require(rethstethCRVf.mint(100e18) == 0, "mint failed");
 
         // cvxFXSFXSf
         uint accrue = cvxFlywheelCore.accrue(ERC20(address(cvxFXSf)), user);
@@ -69,6 +71,13 @@ contract FusePool156Test is DSTestPlus, stdCheats {
         prebalance = crv.balanceOf(user);
         crvFlywheelCore.claimRewards(user);
         require(crv.balanceOf(user) == prebalance + accrued, "crvFlywheel claimRewards");
+
+        accrue = fxsFlywheelCore.accrue(ERC20(address(cvxFXSf)), user);
+        require(accrue > 0, "fxsFlywheel accrue");
+        accrued = fxsFlywheelCore.rewardsAccrued(user);
+        prebalance = fxs.balanceOf(user);
+        fxsFlywheelCore.claimRewards(user);
+        require(fxs.balanceOf(user) == prebalance + accrued, "fxsFlywheel claimRewards");
 
         // cvxCRVf
         hevm.warp(block.timestamp + 10);

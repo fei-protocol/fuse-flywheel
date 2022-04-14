@@ -6,7 +6,7 @@ import {SafeTransferLib} from "solmate/utils/SafeTransferLib.sol";
 
 import {RewardsClaimer} from "../../utils/RewardsClaimer.sol";
 
-// Docs: https://docs.convexfinance.com/convexfinanceintegration/booster
+// Staking Contract reference: https://github.com/alchemix-finance/alchemix-protocol/blob/master/contracts/StakingPools.sol
 
 // main Alchemix staking contract basic interface
 interface IAlchemixStaking {

@@ -27,10 +27,15 @@ interface IAlchemixStaking {
         uint256 _pid
     ) external;
 
-    // get Alchemix staking (pool id + 1) for underlying 
-    function tokenPoolIds(address _token) external returns (uint256 _pid);
+    // get Alchemix staking (pool id + 1) for underlying
+    function tokenPoolIds(
+        address _token
+    ) external returns (uint256 _pid);
 
-    function getStakeTotalDeposited(address _account, uint256 _pid) external view returns (uint256);
+    function getStakeTotalDeposited(
+        address _account,
+        uint256 _pid)
+        external view returns (uint256);
 }
 
 /// @title Alchemix Finance Staking Yield Bearing Vault

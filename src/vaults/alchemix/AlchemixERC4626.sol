@@ -34,8 +34,8 @@ interface IAlchemixStaking {
 
     function getStakeTotalDeposited(
         address _account,
-        uint256 _pid)
-        external view returns (uint256);
+        uint256 _pid
+    ) external view returns (uint256);
 }
 
 /// @title Alchemix Finance Staking Yield Bearing Vault

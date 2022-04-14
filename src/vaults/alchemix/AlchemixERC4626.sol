@@ -73,7 +73,7 @@ contract AlchemixERC4626 is ERC4626, RewardsClaimer {
         // function returns pid + 1
         pid = staking.tokenPoolIds(address(asset)) - 1;
 
-        _asset.approve(address(_staking), type(uint256).max);
+        _asset.safeApprove(address(_staking), type(uint256).max);
     }
 
     function afterDeposit(uint256 amount, uint256) internal override {

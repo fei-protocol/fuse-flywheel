@@ -33,10 +33,6 @@ interface IAlchemixStaking {
     function getStakeTotalDeposited(address _account, uint256 _pid) external view returns (uint256);
 }
 
-interface IRewards {
-    function rewardToken() external view returns (ERC20);
-}
-
 /// @title Alchemix Finance Staking Yield Bearing Vault
 /// @author joeysantoro
 contract AlchemixERC4626 is ERC4626, RewardsClaimer {

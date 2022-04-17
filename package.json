@@ -1,8 +1,12 @@
 {
-  "name": "forge-template",
+  "name": "@fei-protocol/fuse-flywheel",
   "author": "FrankieIsLost",
-  "version": "1.0.0",
-  "description": "A forge template",
+  "license": "AGPL-3.0-only",
+  "version": "0.0.0",
+  "description": "Fuse specific compatibility modules for Flywheel V2",
+  "files": [
+    "src/**/*.sol"
+  ],
   "homepage": "https://github.com/FrankieIsLost/forge-template#readme",
   "repository": {
     "type": "git",

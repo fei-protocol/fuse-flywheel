@@ -2,8 +2,7 @@
 pragma solidity >=0.8.0;
 
 import {DSTestPlus} from "solmate/test/utils/DSTestPlus.sol";
-import {stdCheats} from "forge-std/stdlib.sol";
-import "forge-std/stdlib.sol";
+import "forge-std/Test.sol";
 import "forge-std/Vm.sol";
 
 import {ERC20} from "solmate/tokens/ERC20.sol";
@@ -14,9 +13,7 @@ import "../../interfaces/ICErc20.sol";
 import "../../interfaces/IComptroller.sol";
 import "../../interfaces/IPlugin.sol";
 
-import "../../interfaces/console.sol";
-
-contract FusePool156Test is DSTestPlus, stdCheats {
+contract FusePool156Test is DSTestPlus, Test {
     FuseAdmin fuseAdmin = FuseAdmin(0xa731585ab05fC9f83555cf9Bff8F58ee94e18F85);
     
     // pool 156 comptroller

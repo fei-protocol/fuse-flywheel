@@ -89,6 +89,5 @@ contract Pool190Test is DSTestPlus, Test {
         require(alEthLpf.redeem(alEthLpf.balanceOf(user)) == 0, "alEthlpf redeem");
         require(tAlcxf.redeem(tAlcxf.balanceOf(user)) == 0, "tAlcxf redeem");
         require(alcxethf.redeem(alcxethf.balanceOf(user)) == 0, "alcxethf redeem");
-        
     }
 }

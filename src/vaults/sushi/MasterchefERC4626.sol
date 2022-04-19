@@ -22,7 +22,7 @@ interface IMasterchef {
         address _to
     ) external;
 
-    // claim Alchemix staking rewards
+    // claim Masterchef staking rewards
     function harvest(
         uint256 _pid,
         address _to
@@ -34,12 +34,12 @@ interface IMasterchef {
     ) external view returns (uint256, int256);
 }
 
-/// @title Alchemix Finance Staking Yield Bearing Vault
+/// @title Masterchef Staking Yield Bearing Vault
 /// @author joeysantoro
-contract AlchemixERC4626 is ERC4626, RewardsClaimer {
+contract MasterchefERC4626 is ERC4626, RewardsClaimer {
     using SafeTransferLib for ERC20;
 
-    /// @notice The Alchemix staking contract (for deposit/withdraw)
+    /// @notice The Masterchef staking contract (for deposit/withdraw)
     IMasterchef public immutable staking;
 
     uint256 public immutable pid;
@@ -49,8 +49,8 @@ contract AlchemixERC4626 is ERC4626, RewardsClaimer {
      @param _asset The ERC20 compliant token the Vault should accept.
      @param _name The name for the vault token.
      @param _symbol The symbol for the vault token.
-     @param _staking The Alchemix Staking contract.
-     @param _rewardsDestination the address to send ALCX rewards.
+     @param _staking The Masterchef Staking contract.
+     @param _rewardsDestination the address to send staking rewards.
      @param _rewardTokens the rewards tokens to send out.
     */
     constructor(

@@ -20,7 +20,7 @@ contract Pool190Test is DSTestPlus, Test {
 
     function setUp() public {}
 
-    function testPool6() public {
+    function testPool190() public {
 
         FuseAdmin fuseAdmin = FuseAdmin(0xa731585ab05fC9f83555cf9Bff8F58ee94e18F85);
         hevm.label(address(fuseAdmin), "fuseAdmin");
@@ -36,9 +36,6 @@ contract Pool190Test is DSTestPlus, Test {
 
         FlywheelCore alcxFlywheelCore = FlywheelCore(0x48635Dd90B1d15F3bC60280C36Fb1c7b95108853);
         FlywheelCore sushiFlywheelCore = FlywheelCore(0xC78C326Ae403002eC4b328F5314763953fa06e0F);
-
-        //hevm.prank(address(fuseAdmin));
-        //comptroller._addRewardsDistributor(address(alcxFlywheelCore));
 
         hevm.startPrank(user);
 

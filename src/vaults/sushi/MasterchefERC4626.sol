@@ -32,6 +32,10 @@ interface IMasterchef {
         uint256 _pid,
         address _account
     ) external view returns (uint256, int256);
+
+    function lpToken(
+        uint256 _pid
+    ) external view returns (address);
 }
 
 /// @title Masterchef Staking Yield Bearing Vault
@@ -67,6 +71,7 @@ contract MasterchefERC4626 is ERC4626, RewardsClaimer {
     {
         staking = _staking;
 
+        require(staking.lpToken(_pid) == address(_asset), "pid != asset");
         pid = _pid;
 
         _asset.safeApprove(address(_staking), type(uint256).max);

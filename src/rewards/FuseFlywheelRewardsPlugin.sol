@@ -30,9 +30,11 @@ contract FuseFlywheelDynamicRewards is IFlywheelRewards {
     /// @notice the flywheel core contract
     FlywheelCore public immutable flywheel;
 
-    constructor(ERC20 _rewardToken, FlywheelCore _flywheel) {
-        rewardToken = _rewardToken;
+    constructor(FlywheelCore _flywheel) {
         flywheel = _flywheel;
+        ERC20 _rewardToken = _flywheel.rewardToken();
+        rewardToken = _rewardToken;
+        _rewardToken.safeApprove(address(_flywheel), type(uint256).max);
     }
 
     /**
@@ -54,7 +56,7 @@ contract FuseFlywheelDynamicRewards is IFlywheelRewards {
         if (amount > 0)
             rewardToken.safeTransferFrom(
                 address(market),
-                address(flywheel),
+                address(this),
                 amount
             );
     }

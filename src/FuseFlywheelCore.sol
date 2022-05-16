@@ -46,15 +46,8 @@ contract FuseFlywheelCore is FlywheelCore {
         return rewardsAccrued[user];
     }
 
-    // TODO call addStrategyForRewards instead
     function addMarketForRewards(ERC20 strategy) external {
-        require(strategyState[strategy].index == 0, "strategy");
-        strategyState[strategy] = RewardsState({
-            index: ONE,
-            lastUpdatedTimestamp: uint32(block.timestamp)
-        });
-
-        emit AddStrategy(address(strategy));
+        _addStrategyForRewards(strategy);
     }
 
     function marketState(ERC20 strategy)

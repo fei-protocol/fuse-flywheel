@@ -8,6 +8,8 @@ contract FuseFlywheelCore is FlywheelCore {
 
     bool public constant isFlywheel = true;
 
+    bool public constant rewardingSupply = true;
+
     constructor(
         ERC20 _rewardToken,
         IFlywheelRewards _flywheelRewards,

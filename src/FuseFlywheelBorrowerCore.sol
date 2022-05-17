@@ -3,7 +3,7 @@ pragma solidity 0.8.10;
 
 import "flywheel/FlywheelCore.sol";
 
-contract FuseFlywheelCore is FlywheelCore {
+contract FuseFlywheelBorrowerCore is FlywheelCore {
     bool public constant isRewardsDistributor = true;
 
     bool public constant isFlywheel = true;

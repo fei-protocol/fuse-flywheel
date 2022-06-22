@@ -16,8 +16,8 @@ contract FuseFlywheelBorrowBoosterTest is DSTestPlus {
     MockCToken strategy;
     FuseFlywheelBorrowBooster booster;
 
-    address alice = 0x0000000000000000000000000000000000000010;
-    address bob = 0x0000000000000000000000000000000000000020;
+    address alice = address(0x10);
+    address bob = address(0x20);
 
     function setUp() public {
         MockERC20 underlying = new MockERC20("mock token", "MOCK", 18);

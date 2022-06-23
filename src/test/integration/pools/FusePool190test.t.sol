@@ -1,7 +1,6 @@
 pragma solidity >=0.8.0;
 
-import {DSTestPlus} from "solmate/test/utils/DSTestPlus.sol";
-import "forge-std/Test.sol";
+import { BaseDSTest } from "../../utils/BaseDSTest.sol";
 import "forge-std/Vm.sol";
 
 import {ERC20} from "solmate/tokens/ERC20.sol";
@@ -12,7 +11,7 @@ import "../../interfaces/ICErc20.sol";
 import "../../interfaces/IComptroller.sol";
 import "../../interfaces/IPlugin.sol";
 
-contract Pool190Test is DSTestPlus, Test {
+contract Pool190Test is BaseDSTest {
     address user = 0xB290f2F3FAd4E540D0550985951Cdad2711ac34A;
 
     ERC20 alcx = ERC20(0xdBdb4d16EdA451D0503b854CF79D55697F90c8DF);

@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 pragma solidity >=0.8.0;
 
-import {DSTestPlus} from "solmate/test/utils/DSTestPlus.sol";
-import "forge-std/Test.sol";
+import { BaseDSTest } from "../../utils/BaseDSTest.sol";
 import "forge-std/Vm.sol";
 
 import {ERC20} from "solmate/tokens/ERC20.sol";
@@ -13,7 +12,7 @@ import "../../interfaces/ICErc20.sol";
 import "../../interfaces/IComptroller.sol";
 import "../../interfaces/IPlugin.sol";
 
-contract FusePool156Test is DSTestPlus, Test {
+contract FusePool156Test is BaseDSTest {
     FuseAdmin fuseAdmin = FuseAdmin(0xa731585ab05fC9f83555cf9Bff8F58ee94e18F85);
     
     // pool 156 comptroller

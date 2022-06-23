@@ -1,10 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 pragma solidity 0.8.10;
 
-import {DSTestPlus} from "solmate/test/utils/DSTestPlus.sol";
+import { BaseDSTest } from "../utils/BaseDSTest.sol";
 import {MockERC20, ERC20} from "solmate/test/utils/mocks/MockERC20.sol";
 import {MockBooster} from "flywheel/test/mocks/MockBooster.sol";
-import "forge-std/Test.sol";
 
 import "../../FuseFlywheelCore.sol";
 import {FuseFlywheelDynamicRewards} from "../../rewards/FuseFlywheelDynamicRewards.sol";
@@ -22,7 +21,7 @@ abstract contract CErc20 is ERC20 {
     function mint(uint256 amount) external virtual returns (uint256);
 }
 
-contract FlywheelDynamicRewardsIntegrationTest is DSTestPlus, Test {
+contract FlywheelDynamicRewardsIntegrationTest is BaseDSTest {
     FuseFlywheelCore flywheel;
     FuseFlywheelDynamicRewards rewards;
 

@@ -17,9 +17,7 @@ contract FuseFlywheelBorrowBooster is IFlywheelBooster {
         view
         returns (uint256)
     {
-        uint256 index = CToken(address(strategy)).borrowIndex();
-
-        return (CToken(address(strategy)).totalBorrows() * ONE) / index;
+        return CToken(address(strategy)).totalBorrows();
     }
 
     /**
@@ -33,9 +31,6 @@ contract FuseFlywheelBorrowBooster is IFlywheelBooster {
         view
         returns (uint256)
     {
-        uint256 index = CToken(address(strategy)).borrowIndex();
-
-        return
-            (CToken(address(strategy)).borrowBalanceStored(user) * ONE) / index;
+        return CToken(address(strategy)).borrowBalanceStored(user);
     }
 }

@@ -6,7 +6,7 @@
 	url = https://github.com/brockelmore/forge-std
 [submodule "lib/solmate"]
 	path = lib/solmate
-	url = https://github.com/vminkov/solmate
+	url = https://github.com/Rari-Capital/solmate
 [submodule "lib/flywheel-v2"]
 	path = lib/flywheel-v2
 	url = https://github.com/fei-protocol/flywheel-v2

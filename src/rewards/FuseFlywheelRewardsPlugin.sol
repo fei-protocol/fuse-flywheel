@@ -14,12 +14,12 @@ interface IERC4626 {
     function claimRewards() external;
 }
 
-/** 
+/**
  @title Fuse Flywheel Plugin Reward Stream
  @notice Determines rewards based on how many reward tokens appeared in the market itself since last accrual.
  All rewards are claimed atomically, so there is no need to use the last reward timestamp.
 */
-contract FuseFlywheelDynamicRewards is IFlywheelRewards {
+contract FuseFlywheelRewardsPlugin is IFlywheelRewards {
     using SafeTransferLib for ERC20;
 
     event Log(string message);

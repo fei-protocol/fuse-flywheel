@@ -18,7 +18,7 @@ contract BaseDSTest is DSTestPlus, Test {
         uint256 x,
         uint256 min,
         uint256 max
-    ) public override(DSTestPlus, Test) returns (uint256 result) {
+    ) internal override(DSTestPlus, Test) returns (uint256 result) {
         return Test.bound(x, min, max);
     }
 }

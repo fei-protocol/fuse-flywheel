@@ -78,7 +78,7 @@ contract FlywheelDynamicRewardsIntegrationTest is BaseDSTest {
             .rewardsCycle(fUST3POOL);
 
         // transfer initial 100 rewards to cToken
-        tip(address(rewardToken), address(fUST3POOL), 100e18);
+        deal(address(rewardToken), address(fUST3POOL), 100e18);
     }
 
     function testIntegration() public {

@@ -41,15 +41,15 @@ contract FusePool156Test is BaseDSTest {
     function testPool156() public {
         hevm.startPrank(user);
 
-        tip(cvxFXSFXS, user, 100e18);
+        deal(cvxFXSFXS, user, 100e18);
         CErc20 cvxFXSf = CErc20(0x30916E14C139d65CAfbEEcb3eA525c59df643281);
         require(cvxFXSf.mint(100e18) == 0, "mint failed");
 
-        tip(cvxcrvCRV, user, 100e18);
+        deal(cvxcrvCRV, user, 100e18);
         CErc20 cvxCRVf = CErc20(0x58c8087eF758DF6F6B3dc045cF135C850a8307b6);
         require(cvxCRVf.mint(100e18) == 0, "mint failed");
 
-        tip(rethstethCRV, user, 100e18);
+        deal(rethstethCRV, user, 100e18);
         CErc20 rethstethCRVf = CErc20(0xD88B2E6304d1827e22D2ACC2FbCeD836cd439b85);
         require(rethstethCRVf.mint(100e18) == 0, "mint failed");
 

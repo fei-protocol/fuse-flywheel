@@ -38,7 +38,7 @@ contract Pool190Test is BaseDSTest {
 
         hevm.startPrank(user);
 
-        tip(alEthLp, user, 100e18);
+        deal(alEthLp, user, 100e18);
         CErc20 alEthLpf = CErc20(0x52A3432Ba3c47baf1B09535a71a1491CAff22A08);
         require(alEthLpf.mint(100e18) == 0, "mint failed");
 
@@ -54,7 +54,7 @@ contract Pool190Test is BaseDSTest {
 
         hevm.warp(block.timestamp + 10);
 
-        tip(tAlcx, user, 100e18);
+        deal(tAlcx, user, 100e18);
         CErc20 tAlcxf = CErc20(0xE7E1E74b029420e2a23706A3704E98A13e362DfC);
         require(tAlcxf.mint(100e18) == 0, "mint failed");
 
@@ -66,7 +66,7 @@ contract Pool190Test is BaseDSTest {
         alcxFlywheelCore.claimRewards(user);
         require(alcx.balanceOf(user) == prebalance + accrued, "alcxFlywheelCore claimRewards");
 
-        tip(alcxeth, user, 100e18);
+        deal(alcxeth, user, 100e18);
         CErc20 alcxethf = CErc20(0x2C671c44E205147792fb33Ee889fE112e3e34579);
         require(alcxethf.mint(100e18) == 0, "mint failed");
 

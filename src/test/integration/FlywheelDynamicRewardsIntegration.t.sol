@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 pragma solidity 0.8.10;
 
-import { BaseDSTest } from "../utils/BaseDSTest.sol";
+import {BaseDSTest} from "../utils/BaseDSTest.sol";
 import {MockERC20, ERC20} from "solmate/test/utils/mocks/MockERC20.sol";
 import {MockBooster} from "flywheel/test/mocks/MockBooster.sol";
 

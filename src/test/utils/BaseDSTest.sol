@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 pragma solidity 0.8.10;
 
-import { DSTestPlus } from "solmate/test/utils/DSTestPlus.sol";
-import { Test } from "forge-std/Test.sol";
+import {DSTestPlus} from "solmate/test/utils/DSTestPlus.sol";
+import {Test} from "forge-std/Test.sol";
 
 contract BaseDSTest is DSTestPlus, Test {
     function fail(string memory err) internal override(DSTestPlus, Test) {

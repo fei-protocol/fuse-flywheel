@@ -39,7 +39,11 @@ contract FlywheelLensRouterIntegration is DSTestPlus {
         bool[] memory accrue = new bool[](3);
         accrue[0] = accrue[1] = accrue[2] = true;
 
-        assertEq(accrue.length, flywheels.length, "the sizes of flywheels and accrue don't match");
+        assertEq(
+            accrue.length,
+            flywheels.length,
+            "the sizes of flywheels and accrue don't match"
+        );
 
         uint256 rewards0Before = flywheels[0].rewardToken().balanceOf(user);
         uint256 rewards1Before = flywheels[1].rewardToken().balanceOf(user);
@@ -74,7 +78,11 @@ contract FlywheelLensRouterIntegration is DSTestPlus {
         bool[] memory accrue = new bool[](3);
         accrue[0] = accrue[1] = accrue[2] = true;
 
-        assertEq(accrue.length, flywheels.length, "the sizes of flywheels and accrue don't match");
+        assertEq(
+            accrue.length,
+            flywheels.length,
+            "the sizes of flywheels and accrue don't match"
+        );
 
         FuseFlywheelCore[] memory fwheel2 = new FuseFlywheelCore[](2);
         fwheel2[0] = flywheels[0];

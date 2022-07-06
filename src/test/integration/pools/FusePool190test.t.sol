@@ -1,6 +1,6 @@
 pragma solidity >=0.8.0;
 
-import { BaseDSTest } from "../../utils/BaseDSTest.sol";
+import {BaseDSTest} from "../../utils/BaseDSTest.sol";
 import "forge-std/Vm.sol";
 
 import {ERC20} from "solmate/tokens/ERC20.sol";
@@ -20,11 +20,14 @@ contract Pool190Test is BaseDSTest {
     function setUp() public {}
 
     function testPool190() public {
-
-        FuseAdmin fuseAdmin = FuseAdmin(0xa731585ab05fC9f83555cf9Bff8F58ee94e18F85);
+        FuseAdmin fuseAdmin = FuseAdmin(
+            0xa731585ab05fC9f83555cf9Bff8F58ee94e18F85
+        );
         hevm.label(address(fuseAdmin), "fuseAdmin");
         // pool 190 comptroller
-        Comptroller comptroller = Comptroller(0x4Ba827A642F99773dB5CD39689B410f4646f56E3);
+        Comptroller comptroller = Comptroller(
+            0x4Ba827A642F99773dB5CD39689B410f4646f56E3
+        );
         hevm.label(address(comptroller), "comptroller");
         address multisig = 0x5eA4A9a7592683bF0Bc187d6Da706c6c4770976F;
         hevm.label(multisig, "multisig");
@@ -33,8 +36,12 @@ contract Pool190Test is BaseDSTest {
         address tAlcx = 0xD3B5D9a561c293Fb42b446FE7e237DaA9BF9AA84;
         address alcxeth = 0xC3f279090a47e80990Fe3a9c30d24Cb117EF91a8;
 
-        FlywheelCore alcxFlywheelCore = FlywheelCore(0x48635Dd90B1d15F3bC60280C36Fb1c7b95108853);
-        FlywheelCore sushiFlywheelCore = FlywheelCore(0xC78C326Ae403002eC4b328F5314763953fa06e0F);
+        FlywheelCore alcxFlywheelCore = FlywheelCore(
+            0x48635Dd90B1d15F3bC60280C36Fb1c7b95108853
+        );
+        FlywheelCore sushiFlywheelCore = FlywheelCore(
+            0xC78C326Ae403002eC4b328F5314763953fa06e0F
+        );
 
         hevm.startPrank(user);
 
@@ -45,12 +52,18 @@ contract Pool190Test is BaseDSTest {
         hevm.warp(block.timestamp + 100);
 
         // alEthLpf
-        uint accrue = alcxFlywheelCore.accrue(ERC20(address(alEthLpf)), user);
+        uint256 accrue = alcxFlywheelCore.accrue(
+            ERC20(address(alEthLpf)),
+            user
+        );
         require(accrue > 0, "alcxFlywheelCore accrue1");
-        uint accrued = alcxFlywheelCore.rewardsAccrued(user);
-        uint prebalance = alcx.balanceOf(user);
+        uint256 accrued = alcxFlywheelCore.rewardsAccrued(user);
+        uint256 prebalance = alcx.balanceOf(user);
         alcxFlywheelCore.claimRewards(user);
-        require(alcx.balanceOf(user) == prebalance + accrued, "alcxFlywheelCore claimRewards");
+        require(
+            alcx.balanceOf(user) == prebalance + accrued,
+            "alcxFlywheelCore claimRewards"
+        );
 
         hevm.warp(block.timestamp + 10);
 
@@ -64,7 +77,10 @@ contract Pool190Test is BaseDSTest {
         accrued = alcxFlywheelCore.rewardsAccrued(user);
         prebalance = alcx.balanceOf(user);
         alcxFlywheelCore.claimRewards(user);
-        require(alcx.balanceOf(user) == prebalance + accrued, "alcxFlywheelCore claimRewards");
+        require(
+            alcx.balanceOf(user) == prebalance + accrued,
+            "alcxFlywheelCore claimRewards"
+        );
 
         deal(alcxeth, user, 100e18);
         CErc20 alcxethf = CErc20(0x2C671c44E205147792fb33Ee889fE112e3e34579);
@@ -76,17 +92,29 @@ contract Pool190Test is BaseDSTest {
         accrued = alcxFlywheelCore.rewardsAccrued(user);
         prebalance = alcx.balanceOf(user);
         alcxFlywheelCore.claimRewards(user);
-        require(alcx.balanceOf(user) == prebalance + accrued, "alcxFlywheelCore claimRewards");
+        require(
+            alcx.balanceOf(user) == prebalance + accrued,
+            "alcxFlywheelCore claimRewards"
+        );
 
         accrue = sushiFlywheelCore.accrue(ERC20(address(alcxethf)), user);
         require(accrue > 0, "sushiFlywheelCore");
         accrued = sushiFlywheelCore.rewardsAccrued(user);
         prebalance = sushi.balanceOf(user);
         sushiFlywheelCore.claimRewards(user);
-        require(sushi.balanceOf(user) == prebalance + accrued, "sushiFlywheelCore claimRewards");
+        require(
+            sushi.balanceOf(user) == prebalance + accrued,
+            "sushiFlywheelCore claimRewards"
+        );
 
-        require(alEthLpf.redeem(alEthLpf.balanceOf(user)) == 0, "alEthlpf redeem");
+        require(
+            alEthLpf.redeem(alEthLpf.balanceOf(user)) == 0,
+            "alEthlpf redeem"
+        );
         require(tAlcxf.redeem(tAlcxf.balanceOf(user)) == 0, "tAlcxf redeem");
-        require(alcxethf.redeem(alcxethf.balanceOf(user)) == 0, "alcxethf redeem");
+        require(
+            alcxethf.redeem(alcxethf.balanceOf(user)) == 0,
+            "alcxethf redeem"
+        );
     }
 }

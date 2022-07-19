@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 pragma solidity 0.8.10;
 
-import {DSTestPlus} from "solmate/test/utils/DSTestPlus.sol";
+import { Test } from "forge-std/Test.sol";
 import {MockERC20, ERC20} from "solmate/test/utils/mocks/MockERC20.sol";
 
 import {MockBooster} from "flywheel/test/mocks/MockBooster.sol";
@@ -23,7 +23,7 @@ abstract contract CErc20 is ERC20 {
     function mint(uint256 amount) external virtual returns (uint256);
 }
 
-contract FlywheelIntegrationTest is DSTestPlus {
+contract FlywheelIntegrationTest is Test {
     FuseFlywheelCore flywheel;
     FlywheelStaticRewards rewards;
 
@@ -65,7 +65,7 @@ contract FlywheelIntegrationTest is DSTestPlus {
 
         // add fTRIBE-8 to flywheel and add flywheel to the comptroller
         flywheel.addMarketForRewards(fTRIBE);
-        hevm.prank(comptroller.admin());
+        vm.prank(comptroller.admin());
         require(comptroller._addRewardsDistributor(address(flywheel)) == 0);
 
         // seed rewards to flywheel
@@ -90,7 +90,7 @@ contract FlywheelIntegrationTest is DSTestPlus {
         );
 
         // advance 1 second
-        hevm.warp(block.timestamp + 1);
+        vm.warp(block.timestamp + 1);
     }
 
     function testIntegration() public {
@@ -113,16 +113,16 @@ contract FlywheelIntegrationTest is DSTestPlus {
         require(rewardToken.balanceOf(user) == userRewards);
 
         // mint more tokens by user and rerun test
-        hevm.prank(core);
+        vm.prank(core);
         tribe.transfer(user, 1e6 ether);
 
-        hevm.startPrank(user);
+        vm.startPrank(user);
         tribe.approve(address(fTRIBE), 1e6 ether);
         require(fTRIBE.mint(1e6 ether) == 0);
 
         // for next test, advance 10 seconds instead of 1 (multiply expectations by 10)
         uint256 rewardsPerToken2 = (10 ether * 1 ether) / fTRIBE.totalSupply();
-        hevm.warp(block.timestamp + 10);
+        vm.warp(block.timestamp + 10);
 
         uint256 userRewards2 = (rewardsPerToken2 * fTRIBE.balanceOf(user)) /
             1 ether;

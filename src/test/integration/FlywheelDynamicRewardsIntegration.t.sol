@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 pragma solidity 0.8.10;
 
-import { BaseDSTest } from "../utils/BaseDSTest.sol";
+import { Test } from "forge-std/Test.sol";
 import {MockERC20, ERC20} from "solmate/test/utils/mocks/MockERC20.sol";
 import {MockBooster} from "flywheel/test/mocks/MockBooster.sol";
 
@@ -21,7 +21,7 @@ abstract contract CErc20 is ERC20 {
     function mint(uint256 amount) external virtual returns (uint256);
 }
 
-contract FlywheelDynamicRewardsIntegrationTest is BaseDSTest {
+contract FlywheelDynamicRewardsIntegrationTest is Test {
     FuseFlywheelCore flywheel;
     FuseFlywheelDynamicRewards rewards;
 
@@ -65,10 +65,10 @@ contract FlywheelDynamicRewardsIntegrationTest is BaseDSTest {
 
         // add fUST3POOL-156 to flywheel and add flywheel to the comptroller
         flywheel.addMarketForRewards(fUST3POOL);
-        hevm.prank(comptroller.admin());
+        vm.prank(comptroller.admin());
         require(comptroller._addRewardsDistributor(address(flywheel)) == 0);
 
-        hevm.prank(address(fUST3POOL));
+        vm.prank(address(fUST3POOL));
         rewardToken.approve(address(rewards), type(uint256).max);
 
         // init accrue 0
@@ -84,13 +84,13 @@ contract FlywheelDynamicRewardsIntegrationTest is BaseDSTest {
     function testIntegration() public {
         (uint32 lastSync, uint32 rewardsCycleEnd, uint192 lastReward) = rewards
             .rewardsCycle(fUST3POOL);
-        hevm.prank(address(flywheel));
+        vm.prank(address(flywheel));
         require(flywheel.accrue(fUST3POOL, user) == 0);
         (uint224 index, ) = flywheel.strategyState(fUST3POOL);
         require(index == 1e18);
 
         // finish 1st rewards cycle/start 2nd rewards cycle
-        hevm.warp(((lastSync + 7 days) / 7 days) * 7 days);
+        vm.warp(((lastSync + 7 days) / 7 days) * 7 days);
         flywheel.accrue(fUST3POOL, user);
         require(rewardToken.balanceOf(address(rewards)) == 100e18);
         (index, ) = flywheel.strategyState(fUST3POOL);
@@ -100,7 +100,7 @@ contract FlywheelDynamicRewardsIntegrationTest is BaseDSTest {
         (lastSync, rewardsCycleEnd, lastReward) = rewards.rewardsCycle(
             fUST3POOL
         );
-        hevm.warp(lastSync + 1 days);
+        vm.warp(lastSync + 1 days);
         flywheel.accrue(fUST3POOL, user);
         (index, ) = flywheel.strategyState(fUST3POOL);
         uint256 proportion = (14.2857142857e18 * 1e18) /
@@ -108,13 +108,13 @@ contract FlywheelDynamicRewardsIntegrationTest is BaseDSTest {
             1e18;
         require(index / 1e5 == proportion / 1e5);
 
-        hevm.warp(lastSync + 3.5 days);
+        vm.warp(lastSync + 3.5 days);
         flywheel.accrue(fUST3POOL, user);
         (index, ) = flywheel.strategyState(fUST3POOL);
         proportion = (50e18 * 1e18) / fUST3POOL.totalSupply() + 1e18;
         require(index / 1e5 == proportion / 1e5);
 
-        hevm.warp(lastSync + 7 days);
+        vm.warp(lastSync + 7 days);
         flywheel.accrue(fUST3POOL, user);
         (index, ) = flywheel.strategyState(fUST3POOL);
 

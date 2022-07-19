@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 pragma solidity >=0.8.0;
 
-import {DSTestPlus} from "solmate/test/utils/DSTestPlus.sol";
-import "forge-std/Test.sol";
+import { Test } from "forge-std/Test.sol";
 import "forge-std/Vm.sol";
 
 import {ERC20} from "solmate/tokens/ERC20.sol";
@@ -13,7 +12,7 @@ import "../../interfaces/ICErc20.sol";
 import "../../interfaces/IComptroller.sol";
 import "../../interfaces/IPlugin.sol";
 
-contract FusePool156Test is DSTestPlus, Test {
+contract FusePool156Test is Test {
     FuseAdmin fuseAdmin = FuseAdmin(0xa731585ab05fC9f83555cf9Bff8F58ee94e18F85);
     
     // pool 156 comptroller
@@ -34,23 +33,23 @@ contract FusePool156Test is DSTestPlus, Test {
     FlywheelCore fxsFlywheelCore = FlywheelCore(0x30E9A1Bc6A6a478fC32F9ac900C6530Ad3A1616F);
 
     function setUp() public {
-        hevm.label(address(fuseAdmin), "fuseAdmin");
-        hevm.label(address(comptroller), "comptroller");
-        hevm.label(multisig, "multisig");
+        vm.label(address(fuseAdmin), "fuseAdmin");
+        vm.label(address(comptroller), "comptroller");
+        vm.label(multisig, "multisig");
     }
 
     function testPool156() public {
-        hevm.startPrank(user);
+        vm.startPrank(user);
 
-        tip(cvxFXSFXS, user, 100e18);
+        deal(cvxFXSFXS, user, 100e18);
         CErc20 cvxFXSf = CErc20(0x30916E14C139d65CAfbEEcb3eA525c59df643281);
         require(cvxFXSf.mint(100e18) == 0, "mint failed");
 
-        tip(cvxcrvCRV, user, 100e18);
+        deal(cvxcrvCRV, user, 100e18);
         CErc20 cvxCRVf = CErc20(0x58c8087eF758DF6F6B3dc045cF135C850a8307b6);
         require(cvxCRVf.mint(100e18) == 0, "mint failed");
 
-        tip(rethstethCRV, user, 100e18);
+        deal(rethstethCRV, user, 100e18);
         CErc20 rethstethCRVf = CErc20(0xD88B2E6304d1827e22D2ACC2FbCeD836cd439b85);
         require(rethstethCRVf.mint(100e18) == 0, "mint failed");
 
@@ -77,7 +76,7 @@ contract FusePool156Test is DSTestPlus, Test {
         require(fxs.balanceOf(user) == prebalance + accrued, "fxsFlywheel claimRewards");
 
         // cvxCRVf
-        hevm.warp(block.timestamp + 10);
+        vm.warp(block.timestamp + 10);
         accrue = cvxFlywheelCore.accrue(ERC20(address(cvxCRVf)), user);
         require(accrue > 0, "cvxFlywheel accrue");
         accrued = cvxFlywheelCore.rewardsAccrued(user);
@@ -93,7 +92,7 @@ contract FusePool156Test is DSTestPlus, Test {
         require(crv.balanceOf(user) == prebalance + accrued, "crvFlywheel claimRewards");
 
         // rethstethCRVf
-        hevm.warp(block.timestamp + 10);
+        vm.warp(block.timestamp + 10);
         accrue = cvxFlywheelCore.accrue(ERC20(address(rethstethCRVf)), user);
         require(accrue > 0, "cvxFlywheel accrue");
         accrued = cvxFlywheelCore.rewardsAccrued(user);

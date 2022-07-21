@@ -23,19 +23,14 @@ interface IMasterchef {
     ) external;
 
     // claim Masterchef staking rewards
-    function harvest(
-        uint256 _pid,
-        address _to
-    ) external;
+    function harvest(uint256 _pid, address _to) external;
 
-    function userInfo(
-        uint256 _pid,
-        address _account
-    ) external view returns (uint256, int256);
+    function userInfo(uint256 _pid, address _account)
+        external
+        view
+        returns (uint256, int256);
 
-    function lpToken(
-        uint256 _pid
-    ) external view returns (address);
+    function lpToken(uint256 _pid) external view returns (address);
 }
 
 /// @title Masterchef Staking Yield Bearing Vault

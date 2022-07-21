@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 pragma solidity 0.8.10;
 
-import { Test } from "forge-std/Test.sol";
+import {Test} from "forge-std/Test.sol";
 import {ERC20} from "solmate/test/utils/mocks/MockERC20.sol";
 
 import "../../FuseFlywheelCore.sol";

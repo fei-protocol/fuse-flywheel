@@ -36,8 +36,8 @@ contract FlywheelLensRouterIntegration is Test {
     }
 
     function testRouter() public {
-        bool[] memory accrue = new bool[](3);
-        accrue[0] = accrue[1] = accrue[2] = true;
+        bool[] memory accrue = new bool[](4);
+        accrue[0] = accrue[1] = accrue[2] = accrue[3] = true;
 
         assertEq(
             accrue.length,
@@ -75,8 +75,8 @@ contract FlywheelLensRouterIntegration is Test {
         markets[0] = CToken(address(fSTETH));
         markets[1] = CToken(address(fFRAX3Crv));
 
-        bool[] memory accrue = new bool[](3);
-        accrue[0] = accrue[1] = accrue[2] = true;
+        bool[] memory accrue = new bool[](4);
+        accrue[0] = accrue[1] = accrue[2] = accrue[3] = true;
 
         assertEq(
             accrue.length,

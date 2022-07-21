@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 pragma solidity 0.8.10;
 
-import {DSTestPlus} from "solmate/test/utils/DSTestPlus.sol";
+import { Test } from "forge-std/Test.sol";
 import {ERC20} from "solmate/test/utils/mocks/MockERC20.sol";
 
 import "../../FuseFlywheelCore.sol";
@@ -11,7 +11,7 @@ abstract contract CErc20 is ERC20 {
     function mint(uint256 amount) external virtual returns (uint256);
 }
 
-contract FlywheelLensRouterIntegration is DSTestPlus {
+contract FlywheelLensRouterIntegration is Test {
     FuseFlywheelCore[] flywheels;
     FuseFlywheelLensRouter router;
 

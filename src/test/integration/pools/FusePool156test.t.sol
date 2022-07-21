@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 pragma solidity >=0.8.0;
 
-import {BaseDSTest} from "../../utils/BaseDSTest.sol";
+import { Test } from "forge-std/Test.sol";
 import "forge-std/Vm.sol";
 
 import {ERC20} from "solmate/tokens/ERC20.sol";
@@ -12,7 +12,7 @@ import "../../interfaces/ICErc20.sol";
 import "../../interfaces/IComptroller.sol";
 import "../../interfaces/IPlugin.sol";
 
-contract FusePool156Test is BaseDSTest {
+contract FusePool156Test is Test {
     FuseAdmin fuseAdmin = FuseAdmin(0xa731585ab05fC9f83555cf9Bff8F58ee94e18F85);
 
     // pool 156 comptroller
@@ -37,13 +37,13 @@ contract FusePool156Test is BaseDSTest {
         FlywheelCore(0x30E9A1Bc6A6a478fC32F9ac900C6530Ad3A1616F);
 
     function setUp() public {
-        hevm.label(address(fuseAdmin), "fuseAdmin");
-        hevm.label(address(comptroller), "comptroller");
-        hevm.label(multisig, "multisig");
+        vm.label(address(fuseAdmin), "fuseAdmin");
+        vm.label(address(comptroller), "comptroller");
+        vm.label(multisig, "multisig");
     }
 
     function testPool156() public {
-        hevm.startPrank(user);
+        vm.startPrank(user);
 
         deal(cvxFXSFXS, user, 100e18);
         CErc20 cvxFXSf = CErc20(0x30916E14C139d65CAfbEEcb3eA525c59df643281);
@@ -91,7 +91,7 @@ contract FusePool156Test is BaseDSTest {
         );
 
         // cvxCRVf
-        hevm.warp(block.timestamp + 10);
+        vm.warp(block.timestamp + 10);
         accrue = cvxFlywheelCore.accrue(ERC20(address(cvxCRVf)), user);
         require(accrue > 0, "cvxFlywheel accrue");
         accrued = cvxFlywheelCore.rewardsAccrued(user);
@@ -113,7 +113,7 @@ contract FusePool156Test is BaseDSTest {
         );
 
         // rethstethCRVf
-        hevm.warp(block.timestamp + 10);
+        vm.warp(block.timestamp + 10);
         accrue = cvxFlywheelCore.accrue(ERC20(address(rethstethCRVf)), user);
         require(accrue > 0, "cvxFlywheel accrue");
         accrued = cvxFlywheelCore.rewardsAccrued(user);

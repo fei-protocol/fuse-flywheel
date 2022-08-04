@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 pragma solidity 0.8.10;
 
-import {DSTestPlus} from "solmate/test/utils/DSTestPlus.sol";
+import {Test} from "forge-std/Test.sol";
 import {ERC20} from "solmate/test/utils/mocks/MockERC20.sol";
 
 import "../../FuseFlywheelCore.sol";
@@ -11,7 +11,7 @@ abstract contract CErc20 is ERC20 {
     function mint(uint256 amount) external virtual returns (uint256);
 }
 
-contract FlywheelLensRouterIntegration is DSTestPlus {
+contract FlywheelLensRouterIntegration is Test {
     FuseFlywheelCore[] flywheels;
     FuseFlywheelLensRouter router;
 
@@ -36,8 +36,14 @@ contract FlywheelLensRouterIntegration is DSTestPlus {
     }
 
     function testRouter() public {
-        bool[] memory accrue = new bool[](3);
-        accrue[0] = accrue[1] = accrue[2] = true;
+        bool[] memory accrue = new bool[](4);
+        accrue[0] = accrue[1] = accrue[2] = accrue[3] = true;
+
+        assertEq(
+            accrue.length,
+            flywheels.length,
+            "the sizes of flywheels and accrue don't match"
+        );
 
         uint256 rewards0Before = flywheels[0].rewardToken().balanceOf(user);
         uint256 rewards1Before = flywheels[1].rewardToken().balanceOf(user);
@@ -69,8 +75,14 @@ contract FlywheelLensRouterIntegration is DSTestPlus {
         markets[0] = CToken(address(fSTETH));
         markets[1] = CToken(address(fFRAX3Crv));
 
-        bool[] memory accrue = new bool[](3);
-        accrue[0] = accrue[1] = accrue[2] = true;
+        bool[] memory accrue = new bool[](4);
+        accrue[0] = accrue[1] = accrue[2] = accrue[3] = true;
+
+        assertEq(
+            accrue.length,
+            flywheels.length,
+            "the sizes of flywheels and accrue don't match"
+        );
 
         FuseFlywheelCore[] memory fwheel2 = new FuseFlywheelCore[](2);
         fwheel2[0] = flywheels[0];

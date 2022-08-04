@@ -11,31 +11,21 @@ import {RewardsClaimer} from "../../utils/RewardsClaimer.sol";
 // main Alchemix staking contract basic interface
 interface IAlchemixStaking {
     // deposit into Alchemix staking
-    function deposit(
-        uint256 _pid,
-        uint256 _amount
-    ) external;
+    function deposit(uint256 _pid, uint256 _amount) external;
 
     // withdraw from Alchemix staking
-    function withdraw(
-        uint256 _pid,
-        uint256 _amount
-    ) external;
+    function withdraw(uint256 _pid, uint256 _amount) external;
 
     // claim Alchemix staking rewards
-    function claim(
-        uint256 _pid
-    ) external;
+    function claim(uint256 _pid) external;
 
     // get Alchemix staking (pool id + 1) for underlying
-    function tokenPoolIds(
-        address _token
-    ) external returns (uint256 _pid);
+    function tokenPoolIds(address _token) external returns (uint256 _pid);
 
-    function getStakeTotalDeposited(
-        address _account,
-        uint256 _pid
-    ) external view returns (uint256);
+    function getStakeTotalDeposited(address _account, uint256 _pid)
+        external
+        view
+        returns (uint256);
 }
 
 /// @title Alchemix Finance Staking Yield Bearing Vault

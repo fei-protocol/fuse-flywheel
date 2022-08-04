@@ -25,4 +25,4 @@ jobs:
         run: npm run lint:check
 
       - name: Run tests
-        run: forge test
+        run: forge test --fork-url https://eth-mainnet.g.alchemy.com/v2/jf8PEqEElc58ulLAU_R2KO3UnTtmMJZH --fork-block-number 14717257

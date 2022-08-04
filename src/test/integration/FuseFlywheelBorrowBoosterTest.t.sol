@@ -28,7 +28,7 @@ contract FuseFlywheelBorrowBoosterTest is DSTestPlus {
         flywheel = new FuseFlywheelBorrowerCore(
             rewardToken,
             FlywheelStaticRewards(address(0)),
-                booster,
+            booster,
             address(this),
             Authority(address(0))
         );
@@ -50,7 +50,10 @@ contract FuseFlywheelBorrowBoosterTest is DSTestPlus {
         uint224 rate = 1e10 / uint224(7 days);
         rewards.setRewardsInfo(
             ERC20(address(strategy)),
-            FlywheelStaticRewards.RewardsInfo({ rewardsPerSecond: rate, rewardsEndTimestamp: 0 })
+            FlywheelStaticRewards.RewardsInfo({
+                rewardsPerSecond: rate,
+                rewardsEndTimestamp: 0
+            })
         );
     }
 
@@ -82,6 +85,9 @@ contract FuseFlywheelBorrowBoosterTest is DSTestPlus {
         uint256 aliceRewardsAfter = rewardToken.balanceOf(alice);
         uint256 bobRewardsAfter = rewardToken.balanceOf(bob);
 
-        assertTrue(bobRewardsAfter / aliceRewardsAfter == 9, "rewards ratio should be 9:1 (10% for alice)");
+        assertTrue(
+            bobRewardsAfter / aliceRewardsAfter == 9,
+            "rewards ratio should be 9:1 (10% for alice)"
+        );
     }
 }

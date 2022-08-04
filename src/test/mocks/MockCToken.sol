@@ -35,7 +35,10 @@ interface ICToken {
 
     function borrowBalanceCurrent(address account) external returns (uint256);
 
-    function borrowBalanceStored(address account) external view returns (uint256);
+    function borrowBalanceStored(address account)
+        external
+        view
+        returns (uint256);
 
     function exchangeRateCurrent() external view returns (uint256);
 
@@ -135,10 +138,10 @@ contract MockCToken is MockERC20, CToken {
     }
 
     function balanceOfUnderlying(address)
-    external
-    view
-    override
-    returns (uint256)
+        external
+        view
+        override
+        returns (uint256)
     {
         return 0;
     }
@@ -162,7 +165,7 @@ contract MockCToken is MockERC20, CToken {
     function redeem(uint256 redeemTokens) external returns (uint256) {
         _burn(msg.sender, redeemTokens);
         uint256 redeemAmount = (redeemTokens * effectiveExchangeRate) /
-        EXCHANGE_RATE_SCALE;
+            EXCHANGE_RATE_SCALE;
         if (address(this).balance >= redeemAmount) {
             payable(msg.sender).transfer(redeemAmount);
         } else {
@@ -172,9 +175,9 @@ contract MockCToken is MockERC20, CToken {
     }
 
     function redeemUnderlying(uint256 redeemAmount)
-    external
-    override
-    returns (uint256)
+        external
+        override
+        returns (uint256)
     {
         _burn(
             msg.sender,
@@ -190,12 +193,12 @@ contract MockCToken is MockERC20, CToken {
 
     function exchangeRateStored() external view override returns (uint256) {
         return
-        (EXCHANGE_RATE_SCALE * effectiveExchangeRate) / EXCHANGE_RATE_SCALE; // 2:1
+            (EXCHANGE_RATE_SCALE * effectiveExchangeRate) / EXCHANGE_RATE_SCALE; // 2:1
     }
 
     function exchangeRateCurrent() external view override returns (uint256) {
         return
-        (EXCHANGE_RATE_SCALE * effectiveExchangeRate) / EXCHANGE_RATE_SCALE; // 2:1
+            (EXCHANGE_RATE_SCALE * effectiveExchangeRate) / EXCHANGE_RATE_SCALE; // 2:1
     }
 
     function getCash() external view override returns (uint256) {
@@ -215,10 +218,10 @@ contract MockCToken is MockERC20, CToken {
     }
 
     function interestRateModel()
-    external
-    view
-    override
-    returns (InterestRateModel)
+        external
+        view
+        override
+        returns (InterestRateModel)
     {
         return irm;
     }
@@ -236,10 +239,10 @@ contract MockCToken is MockERC20, CToken {
     }
 
     function initialExchangeRateMantissa()
-    external
-    view
-    override
-    returns (uint256)
+        external
+        view
+        override
+        returns (uint256)
     {
         return 0;
     }
@@ -249,9 +252,9 @@ contract MockCToken is MockERC20, CToken {
     }
 
     function repayBorrowBehalf(address, uint256)
-    external
-    override
-    returns (uint256)
+        external
+        override
+        returns (uint256)
     {
         return 0;
     }
@@ -264,7 +267,12 @@ contract MockCToken is MockERC20, CToken {
         return _totalBorrowed;
     }
 
-    function borrowBalanceStored(address account) external view override returns (uint256) {
+    function borrowBalanceStored(address account)
+        external
+        view
+        override
+        returns (uint256)
+    {
         return borrowBalances[account];
     }
 

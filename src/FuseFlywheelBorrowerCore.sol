@@ -44,6 +44,10 @@ contract FuseFlywheelBorrowerCore is FlywheelCore {
         return rewardsAccrued[user];
     }
 
+    function addMarketForRewards(ERC20 strategy) external requiresAuth {
+        _addStrategyForRewards(strategy);
+    }
+
     function marketState(ERC20 strategy)
         external
         view

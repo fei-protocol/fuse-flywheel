@@ -13,7 +13,7 @@ interface PriceOracle {
     function price(address underlying) external view returns (uint256);
 }
 
-interface Comptroller {
+interface IComptroller {
     function getRewardsDistributors()
         external
         view
@@ -49,7 +49,7 @@ contract FuseFlywheelLensRouter {
         address rewardToken;
     }
 
-    function getMarketRewardsInfo(Comptroller comptroller)
+    function getMarketRewardsInfo(IComptroller comptroller)
         external
         returns (MarketRewardsInfo[] memory)
     {

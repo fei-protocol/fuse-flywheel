@@ -5,7 +5,7 @@ import "flywheel/interfaces/IFlywheelBooster.sol";
 import "../external/CToken.sol";
 
 contract FuseFlywheelBorrowBooster is IFlywheelBooster {
-    uint256 public constant ONE = 1e18;
+    string public constant BOOSTER_TYPE = "FuseFlywheelBorrowBooster";
 
     /**
       @notice calculate the boosted supply of a strategy.

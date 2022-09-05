@@ -7,4 +7,12 @@ abstract contract CToken is CERC20 {
     function comptroller() external view virtual returns (address);
 
     function getCash() external view virtual returns (uint256);
+
+    function borrowBalanceStored(address user)
+        external
+        view
+        virtual
+        returns (uint256);
+
+    function borrowIndex() external view virtual returns (uint256);
 }

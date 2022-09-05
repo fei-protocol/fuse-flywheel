@@ -16,8 +16,8 @@ contract FlywheelLensRouterIntegration is Test {
     FuseFlywheelLensRouter router;
 
     // Pool 156 comptroller
-    Comptroller comptroller =
-        Comptroller(0x07cd53380FE9B2a5E64099591b498c73F0EfaA66);
+    IComptroller comptroller =
+        IComptroller(0x07cd53380FE9B2a5E64099591b498c73F0EfaA66);
 
     // fFRAX-3Crv
     CErc20 fFRAX3Crv = CErc20(0x2ec70d3Ff3FD7ac5c2a72AAA64A398b6CA7428A5);

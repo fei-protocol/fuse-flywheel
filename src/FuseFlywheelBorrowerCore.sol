@@ -3,7 +3,7 @@ pragma solidity 0.8.10;
 
 import "flywheel/FlywheelCore.sol";
 
-contract FuseFlywheelCore is FlywheelCore {
+contract FuseFlywheelBorrowerCore is FlywheelCore {
     bool public constant isRewardsDistributor = true;
 
     bool public constant isFlywheel = true;
@@ -26,21 +26,19 @@ contract FuseFlywheelCore is FlywheelCore {
 
     function flywheelPreSupplierAction(ERC20 market, address supplier)
         external
-    {
-        accrue(market, supplier);
-    }
+    {}
 
     function flywheelPreBorrowerAction(ERC20 market, address borrower)
         external
-    {}
+    {
+        accrue(market, borrower);
+    }
 
     function flywheelPreTransferAction(
         ERC20 market,
         address src,
         address dst
-    ) external {
-        accrue(market, src, dst);
-    }
+    ) external {}
 
     function compAccrued(address user) external view returns (uint256) {
         return rewardsAccrued[user];
